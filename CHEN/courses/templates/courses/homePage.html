@@ -1,0 +1,38 @@
+{% extends "courses/base.html" %}
+
+{% block title %}Courses{% endblock %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'homePageStyles.css' %}">
+<div class="rounded-box">
+    <table>
+        <tr>
+            {% for course in latest_course_list %}
+                <td class="course-name" data-course-id="{{ forloop.counter0 }}">{{ course.courseName }}</td>
+            {% endfor %}
+        </tr>
+    </table>
+
+    <div id="course-details">
+        {% for course in latest_course_list %}
+        <div class="course-detail" id="course-{{ forloop.counter0 }}" style="display: none;">
+            <table>
+                <tr>
+                    <td class="course-image">
+                        <a href="{% url 'courses:'|add:course.linkPath %}">
+                            <img src="{% static course.imagePath %}" alt="{{ course.courseName }}" style="width: 560px; height: 460px; border-radius: 10px; box-shadow: -1px -2px 4px rgba(0, 0, 0, 0.1);">
+                        </a>
+                    </td>
+                    <td class="course-description" style="text-align: justify;">
+                        {{ course.description }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="{% static 'homePageFunction.js' %}"></script>
+{% endblock %}
