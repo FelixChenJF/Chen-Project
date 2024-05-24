@@ -11,15 +11,15 @@ class Course(models.Model):
     imagePath = models.CharField(max_length=200)
     description = models.TextField()
     linkPath = models.CharField(max_length=200, null=True)
-    labels = models.CharField(max_length=200)
+    labels = models.CharField(max_length=200, null=True)
 
     def __str__(self):
         return self.courseName
 
 class English(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=200)
-    label = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, null=True)
+    label = models.CharField(max_length=200, null=True)
     
     def __str__(self):
         return self.title
