@@ -1,5 +1,4 @@
 .rounded-box {
-    border-radius: 10px;
     padding: 8px;
     width: 95%;
     height: auto;
@@ -7,13 +6,11 @@
 
 table {
     width: 100%;
-    border-collapse: collapse;
 }
 
 td {
     padding: 18px;
     text-align: center;
-    vertical-align: top;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
 }
 

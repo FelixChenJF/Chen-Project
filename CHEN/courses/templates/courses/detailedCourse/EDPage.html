@@ -4,6 +4,13 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'EDPageStyles.css' %}">
-English Dictionary
+<div class="container">
+    <div class="row">
+        <button class="column" onclick="playSound()">Technical Terms</button>
+        <button class="column" onclick="playSound()">Daily Vocabulary</button>
+    </div>
+</div>
+<audio id="click-sound" src="{% static 'audios/TheSoundOfTurningBooks.mp3' %}"></audio>
+<script src="{% static 'homePageFunction.js' %}"></script>
 {% endblock %}
 

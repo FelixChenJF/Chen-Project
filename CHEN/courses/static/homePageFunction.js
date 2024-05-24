@@ -19,3 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function playSound() {
+    var audio = document.getElementById('click-sound');
+    audio.play();
+}
