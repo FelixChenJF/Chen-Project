@@ -4,20 +4,25 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'DVPageStyles.css' %}">
-<div class="container">
-    <div class="column left-column">
+<div class="table-container">
+    <div class="left-column">
         <ul>
-            {% for english in latest_English_list %}
-                <li>{{ english.title }}</li>
+            {% for title in latest_Title_list %}
+                <li data-title="{{ title.title }}">{{ title.title }}</li>
             {% endfor %}
         </ul>
     </div>
-    <div class="column right-column">
-        <div class="horizontal-labels">
-            {% for english in latest_English_list %}
-                <span>{{ english.label }}</span>
+    <div class="right-column">
+        <div class="label-group">
+            {% for label in latest_Label_list %}
+                <span class="label-item" data-foreign-key="{{ label.title }}">{{ label.label }}</span>
             {% endfor %}
         </div>
     </div> 
 </div>
+
+<script>
+
+</script>
+<script src="{% static 'DVPageFunction.js' %}"></script>
 {% endblock %}

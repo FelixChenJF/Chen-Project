@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Course, Title, Label
 
 def homePage(request):
@@ -41,8 +41,10 @@ def technical_terms(request):
 
 def daily_vocabulary(request):
     latest_Title_list = Title.objects.all()
+    latest_Label_list = Label.objects.all()
     template = loader.get_template("courses/detailedCourse/daily_vocabulary.html")
     context = {
-        "latest_English_list": latest_Title_list,
+        "latest_Title_list": latest_Title_list,
+        "latest_Label_list": latest_Label_list
     }
     return HttpResponse(template.render(context, request))
