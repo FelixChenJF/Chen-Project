@@ -34,3 +34,11 @@ def OSPage(request):
 def EDPage(request):
 
     return render(request, 'courses/detailedCourse/EDPage.html')
+
+def technical_terms(request):
+    
+    return render(request, 'courses/detailedCourse/technical_terms/')
+
+def daily_vocabulary(request):
+    
+    return render(request, 'courses/detailedCourse/daily_vocabulary/')

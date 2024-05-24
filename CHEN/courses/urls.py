@@ -11,4 +11,10 @@ urlpatterns = [
     path('courses/detailedCourse/SPPage', views.SPPage, name='SPPage'),
     path('courses/detailedCourse/OSPage', views.OSPage, name='OSPage'),
     path('courses/detailedCourse/EDPage', views.EDPage, name='EDPage'),
+    
+]
+
+urlpatterns = [
+    path('detailedCourse/technical_terms/', views.technical_terms, name='technical_terms'),
+    path('detailedCourse/daily-vocabulary/', views.daily_vocabulary, name='daily_vocabulary'),
 ]
