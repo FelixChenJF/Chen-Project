@@ -7,13 +7,17 @@
 <div class="container">
     <div class="column left-column">
         <ul>
-            <li>科技 (Technology)</li>
+            {% for english in latest_English_list %}
+                <li>{{ english.title }}</li>
+            {% endfor %}
         </ul>
     </div>
     <div class="column right-column">
         <div class="horizontal-labels">
-            <span>Serial I/O Interface</span>
+            {% for english in latest_English_list %}
+                <span>{{ english.label }}</span>
+            {% endfor %}
         </div>
-    </div>
+    </div> 
 </div>
 {% endblock %}
