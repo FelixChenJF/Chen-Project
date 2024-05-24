@@ -37,8 +37,8 @@ def EDPage(request):
 
 def technical_terms(request):
     
-    return render(request, 'courses/detailedCourse/technical_terms/')
+    return render(request, 'courses/detailedCourse/technical_terms.html/')
 
 def daily_vocabulary(request):
     
-    return render(request, 'courses/detailedCourse/daily_vocabulary/')
+    return render(request, 'courses/detailedCourse/daily_vocabulary.html/')

@@ -6,11 +6,12 @@
 <link rel="stylesheet" type="text/css" href="{% static 'EDPageStyles.css' %}">
 <div class="container">
     <div class="row">
-        <button class="column" onclick="playSound()">Technical Terms</button>
-        <button class="column" onclick="playSound()">Daily Vocabulary</button>
+        <button class="column">
+            <a href="{% url 'courses:technical_terms' %}">Technical Terms</a>
+        </button>
+        <button class="column">
+            <a href="{% url 'courses:daily_vocabulary' %}">Daily Vocabulary</a>
+        </button>
     </div>
 </div>
-<audio id="click-sound" src="{% static 'audios/TheSoundOfTurningBooks.mp3' %}"></audio>
-<script src="{% static 'homePageFunction.js' %}"></script>
 {% endblock %}
-
