@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
-from .models import Course, English
+from .models import Course, Title, Label
 
 def homePage(request):
     latest_course_list = Course.objects.all()
@@ -40,9 +40,9 @@ def technical_terms(request):
     return render(request, 'courses/detailedCourse/technical_terms.html')
 
 def daily_vocabulary(request):
-    latest_English_list = English.objects.all()
+    latest_Title_list = Title.objects.all()
     template = loader.get_template("courses/detailedCourse/daily_vocabulary.html")
     context = {
-        "latest_English_list": latest_English_list,
+        "latest_English_list": latest_Title_list,
     }
     return HttpResponse(template.render(context, request))
