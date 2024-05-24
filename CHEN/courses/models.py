@@ -17,3 +17,16 @@ class Course(models.Model):
 
 class English(models.Model):
     englishList = models.ForeignKey(Course, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, null=True)
+    description = models.TextField(null=True)
+
+    def __str__(self):
+        return self.title
+
+class Label(models.Model):
+    english = models.ForeignKey(English, related_name='labels', on_delete=models.CASCADE)
+    text = models.CharField(max_length=200, null=True)
+    url = models.URLField(null=True)
+
+    def __str__(self):
+        return self.text
