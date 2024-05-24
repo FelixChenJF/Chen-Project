@@ -2,5 +2,18 @@
 {% block title %}Daily Vocabulary{% endblock %}
 
 {% block content %}
-Daily Vocabulary
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'DVPageStyles.css' %}">
+<div class="container">
+    <div class="column left-column">
+        <ul>
+            <li>科技 (Technology)</li>
+        </ul>
+    </div>
+    <div class="column right-column">
+        <div class="horizontal-labels">
+            <span>Serial I/O Interface</span>
+        </div>
+    </div>
+</div>
 {% endblock %}
