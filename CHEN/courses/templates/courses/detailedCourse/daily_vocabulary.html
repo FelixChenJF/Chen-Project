@@ -6,11 +6,31 @@
 <link rel="stylesheet" type="text/css" href="{% static 'DVPageStyles.css' %}">
 <div class="table-container">
     <div class="left-column">
-        <ul>
-            {% for title in latest_Title_list %}
-                <li data-title="{{ title.title }}">{{ title.title }}</li>
-            {% endfor %}
-        </ul>
+
+        <form method="post" style="display: inline-block; padding-left: 8px;">
+            {% csrf_token %}
+            <div style="display: flex; align-items: center;">
+                {{ title_form.as_p }}
+                <div style="padding-left: 12px;"><button type="submit">Create</button></div>
+            </div>
+        </form>
+        
+        <form method="post">
+            {% csrf_token %}
+            <ul>
+                {% for title in latest_Title_list %}
+                    <li data-title="{{ title.title }}">
+                        <label>
+                            <input type="checkbox" name="titles_to_delete" value="{{ title.id }}">
+                            {{ title.title }}
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div style="text-align: right; margin-bottom: 4px; margin-right: 4px;">
+                <button type="submit" name="delete">Delete Selected</button>
+            </div>
+        </form>
     </div>
     <div class="right-column">
         <div class="label-group">

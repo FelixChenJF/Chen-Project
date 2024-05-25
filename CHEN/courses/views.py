@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.template import loader
-from django.http import HttpResponse, JsonResponse
-from .forms import CustomForm
+from django.http import HttpResponse
+from .forms import CustomForm, TitleForm
 from .models import Course, CustomData, Title, Label
 
 def homePage(request):
@@ -41,15 +41,30 @@ def technical_terms(request):
     return render(request, 'courses/detailedCourse/technical_terms.html')
 
 def daily_vocabulary(request):
+    if request.method == 'POST':
+        if 'delete' in request.POST:
+            titles_to_delete = request.POST.getlist('titles_to_delete')
+            if titles_to_delete:
+                Title.objects.filter(id__in=titles_to_delete).delete()
+            return redirect('courses:daily_vocabulary')
+        
+        title_form = TitleForm(request.POST)
+        if title_form.is_valid():
+            title_form.save()
+            return redirect('courses:daily_vocabulary')
+    else:
+        title_form = TitleForm()
+
     latest_Title_list = Title.objects.all()
     latest_Label_list = Label.objects.all()
-    template = loader.get_template("courses/detailedCourse/daily_vocabulary.html")
+    
     context = {
         "latest_Title_list": latest_Title_list,
-        "latest_Label_list": latest_Label_list
+        "latest_Label_list": latest_Label_list,
+        "title_form": title_form
     }
-    return HttpResponse(template.render(context, request))
-
+    
+    return render(request, 'courses/detailedCourse/daily_vocabulary.html', context)
 
 def custom_page(request):
     label_name = request.GET.get('label')
