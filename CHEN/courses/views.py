@@ -48,3 +48,16 @@ def daily_vocabulary(request):
         "latest_Label_list": latest_Label_list
     }
     return HttpResponse(template.render(context, request))
+
+
+def custom_page(request):
+    label = request.GET.get('label', '')
+    content = get_content_based_on_label(label)
+    template = loader.get_template("courses/detailedCourse/custom_page.html")
+    context = {
+        "label_content": content
+    }
+    return HttpResponse(template.render(context, request))
+
+def get_content_based_on_label(label):
+    return f"{label}"

@@ -15,14 +15,13 @@
     <div class="right-column">
         <div class="label-group">
             {% for label in latest_Label_list %}
-                <span class="label-item" data-foreign-key="{{ label.title }}">{{ label.label }}</span>
+                <span class="label-item" data-foreign-key="{{ label.title }}">
+                    <a href="{% url 'courses:custom_page' %}?label={{ label.label }}">{{ label.label }}</a>
+                </span>
             {% endfor %}
         </div>
     </div> 
 </div>
 
-<script>
-
-</script>
 <script src="{% static 'DVPageFunction.js' %}"></script>
 {% endblock %}

@@ -13,4 +13,5 @@ urlpatterns = [
     path('courses/detailedCourse/EDPage', views.EDPage, name='EDPage'),
     path('detailedCourse/technical_terms/', views.technical_terms, name='technical_terms'),
     path('detailedCourse/daily_vocabulary/', views.daily_vocabulary, name='daily_vocabulary'), 
+    path('detailedCourse/custom_page/', views.custom_page, name='custom_page'),
 ]
