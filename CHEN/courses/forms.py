@@ -6,3 +6,6 @@ class CustomForm(forms.Form):
     audio2 = forms.FileField(label='English Audio', required=False)
     text2 = forms.CharField(label='English Text', widget=forms.Textarea, required=False)
     message = forms.CharField(label='Comments', widget=forms.Textarea, required=False)
+
+class TitleForm(forms.Form):
+    title = forms.CharField(max_length=200)
