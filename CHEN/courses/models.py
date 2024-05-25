@@ -37,6 +37,7 @@ class CustomData(models.Model):
     message = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     label = models.ForeignKey(Label, related_name='custom_data', on_delete=models.CASCADE)
-
+    title = models.ForeignKey(Title, related_name='custom_data', on_delete=models.CASCADE)
+    
     def __str__(self):
         return f'CustomData - {self.created_at}'
