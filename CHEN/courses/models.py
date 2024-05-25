@@ -29,3 +29,14 @@ class Label(models.Model):
 
     def __str__(self):
         return self.label
+class CustomData(models.Model):
+    audio1 = models.FileField(upload_to='audios/', null=True, blank=True)
+    text1 = models.TextField(null=True, blank=True)
+    audio2 = models.FileField(upload_to='audios/', null=True, blank=True)
+    text2 = models.TextField(null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    label = models.ForeignKey(Label, related_name='custom_data', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'CustomData - {self.created_at}'

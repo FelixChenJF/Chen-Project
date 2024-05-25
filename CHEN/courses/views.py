@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.template import loader
-from django.http import HttpResponse, JsonResponse
-from .models import Course, Title, Label
+from django.http import HttpResponse
+from .forms import CustomForm
+from .models import Course, CustomData, Title, Label
 
 def homePage(request):
     latest_course_list = Course.objects.all()
@@ -51,13 +52,42 @@ def daily_vocabulary(request):
 
 
 def custom_page(request):
-    label = request.GET.get('label', '')
-    content = get_content_based_on_label(label)
-    template = loader.get_template("courses/detailedCourse/custom_page.html")
-    context = {
-        "label_content": content
-    }
-    return HttpResponse(template.render(context, request))
+    if request.method == 'POST':
+        form = CustomForm(request.POST, request.FILES)
+        if form.is_valid():
+            title_name = request.POST.get('title', '')
+            title, created = Title.objects.get_or_create(title=title_name)
+            
+            label_name = request.POST.get('label', '')
+            label = Label(label=label_name, title=title)
+            label.save()
+            
+            custom_data = CustomData(
+                audio1=form.cleaned_data['audio1'],
+                text1=form.cleaned_data['text1'],
+                audio2=form.cleaned_data['audio2'],
+                text2=form.cleaned_data['text2'],
+                message=form.cleaned_data['message'],
+                label=label
+            )
+            custom_data.save()
+            return redirect('/courses/detailedCourse/custom_page/')
+    else:
+        custom_data = CustomData.objects.all().first()
+        if custom_data:
+            initial_text1 = custom_data.text1
+            initial_text2 = custom_data.text2
+            initial_message = custom_data.message
+        else:
+            initial_text1 = ''
+            initial_text2 = ''
+            initial_message = ''
 
-def get_content_based_on_label(label):
-    return f"{label}"
+        form = CustomForm()
+
+    return render(request, 'courses/detailedCourse/custom_page.html', {
+        'form': form,
+        'initial_text1': initial_text1,
+        'initial_text2': initial_text2,
+        'initial_message': initial_message
+    })
