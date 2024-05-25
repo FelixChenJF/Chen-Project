@@ -4,26 +4,8 @@
 {% block content %}
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <style>
-    .custom-btn {
-        background-color: #000000;
-        border: none;
-        color: white;
-        margin-left: auto;
-        display: block;
-    }
-    .delete-btn {
-        background-color: #000000;
-        border: none;
-        color: white;
-        float: right;
-        margin-left: 10px;
-    }
-    .form-with-buttons {
-        display: flex;
-        align-items: center;
-    }
 </style>
-<div class="container mt-5">
+<div class="container">
     <div class="row">
         <div class="col-md-8">
             <div class="mb-3">
@@ -32,48 +14,40 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="audio1">Chinese Audio</label>
-                        <input type="file" class="form-control" id="audio1" name="audio1" accept="audio/*">
+                        <input type="file" class="form-control" id="audio1" name="audio1" accept="audios/*">
                     </div>
                 </form>
             </div>
-            <button id="submit_audio1" type="submit" class="btn custom-btn mt-2">Submit</button>
-            <button id="edit_audio1" style="display:none" class="btn custom-btn mt-2">Edit</button>
             <div class="mb-3">
                 <h5>Chinese Text</h5>
                 <form id="text1_form" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="text1">Chinese Text</label>
-                        <textarea class="form-control" id="text1" name="text1" rows="4">{{ initial_text1 }}</textarea>
+                        <textarea class="form-control" id="text1" name="text1" rows="4"></textarea>
                     </div>
                 </form>
             </div>
-            <button id="submit_text1" type="submit" class="btn custom-btn mt-2">Submit</button>
-            <button id="edit_text1" style="display:none" class="btn custom-btn mt-2">Edit</button>
             <div class="mb-3">
                 <h5>English Audio</h5>
                 <form id="audio2_form" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="audio2">English Audio</label>
-                        <input type="file" class="form-control" id="audio2" name="audio2" accept="audio/*">
+                        <input type="file" class="form-control" id="audio2" name="audio2" accept="audios/*">
                     </div>
                 </form>
             </div>
-            <button id="submit_audio2" type="submit" class="btn custom-btn mt-2">Submit</button>
-            <button id="edit_audio2" style="display:none" class="btn custom-btn mt-2">Edit</button>
             <div class="mb-3">
                 <h5>English Text</h5>
                 <form id="text2_form" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="text2">English Text</label>
-                        <textarea class="form-control" id="text2" name="text2" rows="4">{{ initial_text2 }}</textarea>
+                        <textarea class="form-control" id="text2" name="text2" rows="4"></textarea>
                     </div>
                 </form>
             </div>
-            <button id="submit_text2" type="submit" class="btn custom-btn mt-2">Submit</button>
-            <button id="edit_text2" style="display:none" class="btn custom-btn mt-2">Edit</button>
         </div>
         <div class="col-md-4">
             <h5>Comments</h5>
@@ -81,121 +55,11 @@
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="message">Comments</label>
-                    <textarea class="form-control" id="message" name="message" rows="10">{{ initial_message }}</textarea>
+                    <textarea class="form-control" id="message" name="message" rows="10"></textarea>
                 </div>
             </form>
-            <button id="submit_message" type="submit" class="btn custom-btn mt-2">Submit</button>
-            <button id="edit_message" style="display:none" class="btn custom-btn mt-2">Edit</button>
         </div>
     </div>
 </div>
-
-<script>
-    const forms = [
-        {
-            formId: 'audio1_form',
-            submitButtonId: 'submit_audio1',
-            editButtonId: 'edit_audio1',
-            textAreaId: 'text1',
-            deleteButtonId: 'delete_text1'
-        },
-        {
-            formId: 'text1_form',
-            submitButtonId: 'submit_text1',
-            editButtonId: 'edit_text1',
-            textAreaId: 'text1',
-            deleteButtonId: 'delete_text1'
-        },
-        {
-            formId: 'audio2_form',
-            submitButtonId: 'submit_audio2',
-            editButtonId: 'edit_audio2',
-            textAreaId: 'text2'
-        },
-        {
-            formId: 'text2_form',
-            submitButtonId: 'submit_text2',
-            editButtonId: 'edit_text2',
-            textAreaId: 'text2'
-        },
-        {
-            formId: 'message_form',
-            submitButtonId: 'submit_message',
-            editButtonId: 'edit_message',
-            textAreaId: 'message'
-        }
-    ];
-
-    forms.forEach(form => {
-        const formElement = document.getElementById(form.formId);
-        const submitButton = document.getElementById(form.submitButtonId);
-        const editButton = document.getElementById(form.editButtonId);
-        const textArea = document.getElementById(form.textAreaId);
-
-        submitButton.addEventListener('click', function(event) {
-            event.preventDefault();
-
-            const formData = new FormData(formElement);
-
-            fetch(formElement.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Store the submitted text in the backend
-                    fetch('/save_text', {
-                        method: 'POST',
-                        body: JSON.stringify({ text: textArea.value }), // Send the submitted text to the backend
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}'
-                        }
-                    })
-                    .then(saveResponse => {
-                        if (saveResponse.ok) {
-                            // Text saved successfully, handle as needed
-                        } else {
-                            // Handle error response if needed
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error saving text:', error);
-                    });
-
-                    formElement.style.display = 'none';
-                    submitButton.style.display = 'none';
-                    editButton.style.display = 'block';
-                    
-                    // Create a new div to display submitted text
-                    const submittedTextDiv = document.createElement('div');
-                    submittedTextDiv.classList.add('submitted-text');submittedTextDiv.textContent = textArea.value;
-                    
-                    // Append the submitted text to the form
-                    formElement.parentElement.insertBefore(submittedTextDiv, formElement.nextSibling);
-                } else {
-                    // Handle error response if needed
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        });
-
-        editButton.addEventListener('click', function() {
-            formElement.style.display = 'block';
-            submitButton.style.display = 'block';
-            editButton.style.display = 'none';
-            // Remove the submitted text when editing
-            const submittedTextDiv = formElement.parentElement.querySelector('.submitted-text');
-            if (submittedTextDiv) {
-                submittedTextDiv.remove();
-            }
-        });
-    });
-</script>
 {% endblock %}
                    
