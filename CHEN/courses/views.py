@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.template import loader
 from django.http import HttpResponse
-from .forms import CustomForm, TitleForm
+from .forms import CustomForm, LabelForm, TitleForm
 from .models import Course, CustomData, Title, Label
 
 def homePage(request):
@@ -42,18 +42,35 @@ def technical_terms(request):
 
 def daily_vocabulary(request):
     if request.method == 'POST':
-        if 'delete' in request.POST:
+        if 'delete_titles' in request.POST:
             titles_to_delete = request.POST.getlist('titles_to_delete')
             if titles_to_delete:
                 Title.objects.filter(id__in=titles_to_delete).delete()
             return redirect('courses:daily_vocabulary')
-        
-        title_form = TitleForm(request.POST)
-        if title_form.is_valid():
-            title_form.save()
+
+        if 'delete_labels' in request.POST:
+            labels_to_delete = request.POST.getlist('labels_to_delete')
+            if labels_to_delete:
+                Label.objects.filter(id__in=labels_to_delete).delete()
             return redirect('courses:daily_vocabulary')
+
+        if 'title_form' in request.POST:
+            title_form = TitleForm(request.POST)
+            if title_form.is_valid():
+                title_form.save()
+                return redirect('courses:daily_vocabulary')
+            label_form = LabelForm()  # Ensure label_form is always instantiated
+
+        elif 'label_form' in request.POST:
+            label_form = LabelForm(request.POST)
+            if label_form.is_valid():
+                label_form.save()
+                return redirect('courses:daily_vocabulary')
+            title_form = TitleForm()  # Ensure title_form is always instantiated
+
     else:
         title_form = TitleForm()
+        label_form = LabelForm()
 
     latest_Title_list = Title.objects.all()
     latest_Label_list = Label.objects.all()
@@ -61,10 +78,12 @@ def daily_vocabulary(request):
     context = {
         "latest_Title_list": latest_Title_list,
         "latest_Label_list": latest_Label_list,
-        "title_form": title_form
+        "title_form": title_form,
+        "label_form": label_form
     }
     
     return render(request, 'courses/detailedCourse/daily_vocabulary.html', context)
+
 
 def custom_page(request):
     label_name = request.GET.get('label')

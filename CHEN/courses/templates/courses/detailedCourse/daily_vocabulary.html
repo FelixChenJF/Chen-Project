@@ -16,6 +16,9 @@
         
         <form method="post" action="{% url 'courses:daily_vocabulary' %}">
             {% csrf_token %}
+            <div style="text-align: right; margin-bottom: 4px; margin-right: 8px;">
+                <button type="submit" name="delete_titles">Delete Selected</button>
+            </div>
             <ul>
                 {% for title in latest_Title_list %}
                     <li data-title="{{ title.title }}">
@@ -26,9 +29,6 @@
                     </li>
                 {% endfor %}
             </ul>
-            <div style="text-align: right; margin-bottom: 4px; margin-right: 8px;">
-                <button type="submit" name="delete_titles">Delete Selected</button>
-            </div>
         </form>
     </div>
     <div class="right-column">
@@ -44,16 +44,18 @@
 
         <form method="post" action="{% url 'courses:daily_vocabulary' %}">
             {% csrf_token %}
-            <div class="label-container" style="display: flex; flex-wrap: wrap;">
+            <div class="label-container">
                 {% for label in latest_Label_list %}
-                    <div style="display: flex; align-items: center; margin-right: 10px; margin-bottom: 5px;">
+                <div style="display: inline-block; width: 200px; margin: 12px 100px 20px 18px;">
                         <input type="checkbox" name="labels_to_delete" value="{{ label.id }}">
                         <span class="label-item" data-foreign-key="{{ label.title }}" style="margin-left: 5px;">
-                            <a href="{% url 'courses:custom_page' %}?label={{ label.label }}">{{ label.label }}</a>
+                            <a href="{% url 'courses:custom_page' %}?label={{ label.label }}" style="text-decoration: none; color: black;">{{ label.label }}</a>
                         </span>
                     </div>
                 {% endfor %}
-                <button type="submit" name="delete_labels" style="margin-left: auto;">Delete Selected Label</button>
+            </div>
+            <div Style="padding-left: 861px; padding-top: 28px;">
+                <button type="submit" name="delete_labels" >Delete Selected Label</button>
             </div>
         </form>
     </div> 

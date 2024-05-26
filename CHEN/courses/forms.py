@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Title
+from .models import Title, Label
 
 class CustomForm(forms.Form):
     audio1 = forms.FileField(label='Chinese Audio', required=False)
@@ -16,3 +16,13 @@ class TitleForm(forms.ModelForm):
         labels = {
             'title': 'Title',
         }
+        
+class LabelForm(forms.ModelForm):
+    class Meta:
+        model = Label
+        fields = ['label', 'title']
+        labels = {
+            'label': 'Label',
+            'title': 'Title'
+        }
+    
