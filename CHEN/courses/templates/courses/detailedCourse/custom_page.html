@@ -3,37 +3,8 @@
 
 {% block content %}
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    .user-text {
-        /* Initial styles */
-        font-weight: normal;
-        font-style: normal;
-        color: black;
-    }
-    .button-container {
-        margin-top: 10px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-    }
-    .button-container button {
-        margin: 0 5px; 
-        padding: 5px 10px;
-        border: none;
-        border-radius: 5px;
-        background-color: #000000;
-        color: white;
-        cursor: pointer;
-    }
-    .button-container button:hover {
-        background-color: #0056b3;
-    }
-    /* Add vertical spacing */
-    h5 {
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-</style>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'CPPageStyles.css' %}">
 <div class="container">
     <div class="button-container">
         <button onclick="toggleBold()"><span style="font-weight: bold;">Bold</span></button>
@@ -45,32 +16,46 @@
             <button onclick="changeTextColor('black')" style="background-color: black; color: white;">Black</button>
         </div>
     </div>
-    <hr></hr>
+    <hr>
     <div class="row">
         <div class="col-md-8">
-            <div class="mb-3">
-                <em><h3><strong>{{ Label_name }}</strong></h3></em>
-                <h5>Text in Chinese</h5>
-                <div id="chineseText" class="user-text" contenteditable="true">Chinese Text</div>
-            </div>
-            <hr></hr>
-            <div class="mb-3">
-                <h5>Text in English</h5>
-                <div id="englishText" class="user-text" contenteditable="true">English Text</div>
-            </div>
-            <hr></hr>
+            <em><h3><strong>{{ label_name }}</strong></h3></em>
+            {% for custom_data in latest_CustomData_list %}
+                <div class="mb-3">
+                    <h5>Text in Chinese</h5>
+                    <div id="chineseText{{ forloop.counter }}" class="user-text" contenteditable="true">{{ custom_data.text1|safe }}</div>
+                </div>
+                <hr>
+                <div class="mb-3">
+                    <h5>Text in English</h5>
+                    <div id="englishText{{ forloop.counter }}" class="user-text" contenteditable="true">{{ custom_data.text2|safe }}</div>
+                </div>
+                <hr>
+            {% endfor %}
         </div>
         <div class="col-md-4">
             <h5>Comments</h5>
             <div id="comments" class="user-text" contenteditable="true">Comments</div>
         </div>
     </div>
+    <div class="save-button-container">
+        <button onclick="saveChanges()">Save Changes</button>
+    </div>
+
+    <form id="createTextForm">
+        <div class="form-group">
+            <label for="chineseText" style="font-weight: 500; font-size: 20px;">Text in Chinese</label>
+            <input type="text" class="form-control" id="chineseText" placeholder="Enter Chinese text">
+        </div>
+        <div class="form-group">
+            <label for="englishText" style="font-weight: 500; font-size: 20px;">Text in English</label>
+            <input type="text" class="form-control" id="englishText" placeholder="Enter English text">
+        </div>
+        <button type="button" id="createTextBtn" onclick="createText()">Create Text</button>
+    </form>
 </div>
 
 <script>
-    var selectedText = '';
-
-    // Load saved styles from local storage
     window.onload = function() {
         var savedStyles = localStorage.getItem('customStyles');
         if (savedStyles) {
@@ -78,24 +63,65 @@
         }
     }
 
-    // Function to save styles to local storage
     function saveStyles(styles) {
         localStorage.setItem('customStyles', styles);
     }
 
     function toggleBold() {
         document.execCommand('bold');
-        saveStyles(document.querySelector('style').textContent); // Save styles after modification
+        saveStyles(document.querySelector('style').textContent);
     }
 
     function toggleItalic() {
         document.execCommand('italic');
-        saveStyles(document.querySelector('style').textContent); // Save styles after modification
+        saveStyles(document.querySelector('style').textContent);
     }
 
     function changeTextColor(color) {
         document.execCommand('foreColor', false, color);
-        saveStyles(document.querySelector('style').textContent); // Save styles after modification
+        saveStyles(document.querySelector('style').textContent);
     }
+
+    function createText() {
+        var chineseText = document.getElementById('chineseText').value;
+        var englishText = document.getElementById('englishText').value;
+        
+        var chineseTextHtml = '<div class="mb-3"><div class="user-text" contenteditable="true">' + chineseText + '</div><h5>Text in Chinese</h5></div><hr>';
+        var englishTextHtml = '<div class="mb-3"><div class="user-text" contenteditable="true">' + englishText + '</div><h5>Text in English</h5></div><hr>';
+        document.querySelector('.col-md-8').innerHTML += chineseTextHtml + englishTextHtml;
+
+        document.getElementById('chineseText').value = '';
+        document.getElementById('englishText').value = '';
+    }
+
+    function saveChanges() {
+        var customDataList = [];
+        {% for custom_data in latest_CustomData_list %}
+            var chineseText = document.getElementById('chineseText{{ forloop.counter }}').innerHTML;
+            var englishText = document.getElementById('englishText{{ forloop.counter }}').innerHTML;
+            customDataList.push({
+                'id': {{ custom_data.id }},
+                'text1': chineseText,
+                'text2': englishText
+            });
+        {% endfor %}
+
+        fetch('{% url "courses:custom_page" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON
+            .stringify({'customDataList': customDataList})}).then(response => {
+                if (response.ok) {
+                    alert('Changes saved successfully!');
+                } else {
+                    alert('Failed to save changes.');
+                }
+            }).catch(error => {console.error('Error:', error);});
+        }
 </script>
 {% endblock %}
+        
+        

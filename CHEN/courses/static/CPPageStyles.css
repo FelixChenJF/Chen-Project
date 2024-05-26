@@ -1,0 +1,71 @@
+.user-text {
+    font-weight: normal;
+    font-style: normal;
+    color: black;
+}
+.button-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.button-container button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #000000;
+    color: white;
+    cursor: pointer;
+    font-size: 14px; /* 调小字体 */
+}
+.button-container button:hover {
+    background-color: #0056b3;
+}
+h5 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.save-button-container {
+    margin-top: 20px;
+    text-align: right;
+}
+.save-button-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    background-color: #000000;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+}
+.save-button-container button:hover {
+    background-color: #333333;
+    transform: scale(1.05);
+}
+.save-button-container button:active {
+    background-color: #555555;
+    transform: scale(1);
+}
+#createTextBtn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 15px;
+    background-color: #000000;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+    float: right;
+}
+#createTextBtn:hover {
+    background-color: #333333;
+    transform: scale(1.05);
+}
+#createTextBtn:active {
+    background-color: #555555;
+    transform: scale(1);
+}

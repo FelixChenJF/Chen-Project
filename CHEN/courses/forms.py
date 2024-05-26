@@ -1,26 +1,23 @@
 from django import forms
-
-from .models import Title, Label
+from .models import CommentData, Title, Label, CustomData
 
 class CustomForm(forms.Form):
     class Meta:
-        model = Title
-        fields = ['text1', 'text2', 'label', 'title']
+        model = CustomData
+        fields = ['text1', 'text2', 'label']
         labels = {
             'text1': 'Text1',
             'text2': 'Text2',
             'label': 'Label',
-            'title': 'Title',
         }
 
 class CommentForm(forms.Form):
     class Meta:
-        model = Title
-        fields = ['message', 'label', 'label', 'title']
+        model = CommentData
+        fields = ['message', 'label', 'label']
         labels = {
             'message': 'Message',
             'label': 'Label',
-            'title': 'Title',
         }
 
 class TitleForm(forms.ModelForm):

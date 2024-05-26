@@ -1,6 +1,5 @@
 {% extends "courses/base.html" %}
 {% block title %}Daily Vocabulary{% endblock %}
-
 {% block content %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'DVPageStyles.css' %}">
@@ -25,6 +24,7 @@
                     <label>
                         <input type="checkbox" name="titles_to_delete" value="{{ title.id }}">
                         <span id="title-text-{{ title.id }}">{{ title.title }}</span>
+
                         <div style="padding-top: 5px;">
                             <form method="post" action="{% url 'courses:daily_vocabulary' %}" id="edit-title-form-{{ title.id }}">
                                 {% csrf_token %}

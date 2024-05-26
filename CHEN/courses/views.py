@@ -1,6 +1,8 @@
+import json
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect, render
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .forms import CustomForm, LabelForm, TitleForm
 from .models import Course, CustomData, Title, Label
 
@@ -106,11 +108,25 @@ def daily_vocabulary(request):
     
     return render(request, 'courses/detailedCourse/daily_vocabulary.html', context)
 
+@csrf_exempt
 def custom_page(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        custom_data_list = data.get('customDataList', [])
+        for custom_data in custom_data_list:
+            try:
+                custom_data_obj = CustomData.objects.get(id=custom_data['id'])
+                custom_data_obj.text1 = custom_data['text1']
+                custom_data_obj.text2 = custom_data['text2']
+                custom_data_obj.save()
+            except CustomData.DoesNotExist:
+                continue
+        return JsonResponse({'status': 'success'})
+
     label_name = request.GET.get('label')
-    latest_CustomData_list = CustomData.objects.all()
+    latest_CustomData_list = CustomData.objects.filter(label__label=label_name) if label_name else CustomData.objects.all()
     context = {
-        "Latest_CustomData_list": latest_CustomData_list,
-        "Label_name": label_name,
+        "latest_CustomData_list": latest_CustomData_list,
+        "label_name": label_name,
     }
     return render(request, "courses/detailedCourse/custom_page.html", context)
