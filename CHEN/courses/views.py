@@ -41,6 +41,8 @@ def technical_terms(request):
     return render(request, 'courses/detailedCourse/technical_terms.html')
 
 def daily_vocabulary(request):
+    error_message = None
+
     if request.method == 'POST':
         if 'delete_titles' in request.POST:
             titles_to_delete = request.POST.getlist('titles_to_delete')
@@ -59,14 +61,33 @@ def daily_vocabulary(request):
             if title_form.is_valid():
                 title_form.save()
                 return redirect('courses:daily_vocabulary')
-            label_form = LabelForm()  # Ensure label_form is always instantiated
+            label_form = LabelForm()
 
         elif 'label_form' in request.POST:
             label_form = LabelForm(request.POST)
             if label_form.is_valid():
-                label_form.save()
-                return redirect('courses:daily_vocabulary')
-            title_form = TitleForm()  # Ensure title_form is always instantiated
+                new_label = label_form.cleaned_data['label']
+                if Label.objects.filter(label=new_label).exists():
+                    error_message = f"The label '{new_label}' already exists."
+                else:
+                    label_form.save()
+                    return redirect('courses:daily_vocabulary')
+            title_form = TitleForm()
+
+        elif 'edit_title' in request.POST:
+            title_id = request.POST.get('title_id')
+            new_title = request.POST.get('new_title')
+            Title.objects.filter(id=title_id).update(title=new_title)
+            return redirect('courses:daily_vocabulary')
+
+        elif 'edit_label' in request.POST:
+            label_id = request.POST.get('label_id')
+            new_label = request.POST.get('new_label')
+            if Label.objects.filter(label=new_label).exists():
+                error_message = f"The label '{new_label}' already exists."
+            else:
+                Label.objects.filter(id=label_id).update(label=new_label)
+            return redirect('courses:daily_vocabulary')
 
     else:
         title_form = TitleForm()
@@ -79,11 +100,11 @@ def daily_vocabulary(request):
         "latest_Title_list": latest_Title_list,
         "latest_Label_list": latest_Label_list,
         "title_form": title_form,
-        "label_form": label_form
+        "label_form": label_form,
+        "error_message": error_message
     }
     
     return render(request, 'courses/detailedCourse/daily_vocabulary.html', context)
-
 
 def custom_page(request):
     label_name = request.GET.get('label')
