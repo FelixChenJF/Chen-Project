@@ -1,15 +1,18 @@
 from django import forms
 from .models import CommentData, Title, Label, CustomData
 
-class CustomForm(forms.Form):
+from django import forms
+from .models import CustomData
+
+class CustomForm(forms.ModelForm):
     class Meta:
         model = CustomData
-        fields = ['text1', 'text2', 'label']
+        fields = ['text1', 'text2']
         labels = {
-            'text1': 'Text1',
-            'text2': 'Text2',
-            'label': 'Label',
+            'text1': 'Text in Chinese',
+            'text2': 'Text in English',
         }
+
 
 class CommentForm(forms.Form):
     class Meta:

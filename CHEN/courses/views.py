@@ -111,22 +111,32 @@ def daily_vocabulary(request):
 @csrf_exempt
 def custom_page(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        custom_data_list = data.get('customDataList', [])
-        for custom_data in custom_data_list:
-            try:
-                custom_data_obj = CustomData.objects.get(id=custom_data['id'])
-                custom_data_obj.text1 = custom_data['text1']
-                custom_data_obj.text2 = custom_data['text2']
-                custom_data_obj.save()
-            except CustomData.DoesNotExist:
-                continue
-        return JsonResponse({'status': 'success'})
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+            custom_data_list = data.get('customDataList', [])
+            for custom_data in custom_data_list:
+                try:
+                    custom_data_obj = CustomData.objects.get(id=custom_data['id'])
+                    custom_data_obj.text1 = custom_data['text1']
+                    custom_data_obj.text2 = custom_data['text2']
+                    custom_data_obj.save()
+                except CustomData.DoesNotExist:
+                    continue
+            return JsonResponse({'status': 'success'})
+        else:
+            form = CustomForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('courses:custom_page')
+
+    else:
+        form = CustomForm()
 
     label_name = request.GET.get('label')
     latest_CustomData_list = CustomData.objects.filter(label__label=label_name) if label_name else CustomData.objects.all()
     context = {
-        "latest_CustomData_list": latest_CustomData_list,
-        "label_name": label_name,
+        'form': form,
+        'latest_CustomData_list': latest_CustomData_list,
+        'label_name': label_name,
     }
-    return render(request, "courses/detailedCourse/custom_page.html", context)
+    return render(request, 'courses/detailedCourse/custom_page.html', context)

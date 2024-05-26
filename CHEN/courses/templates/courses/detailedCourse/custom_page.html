@@ -3,8 +3,59 @@
 
 {% block content %}
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'CPPageStyles.css' %}">
+<style>
+    .user-text {
+        font-weight: normal;
+        font-style: normal;
+        color: black;
+    }
+    .button-container {
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .button-container button {
+        margin: 0 5px;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 10px; /* 增大圆角半径 */
+        background-color: #000000;
+        color: white;
+        cursor: pointer;
+        font-size: 14px; /* 调小字体 */
+    }
+    .button-container button:hover {
+        background-color: #0056b3;
+    }
+    h5 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .save-button-container {
+        margin-top: 20px;
+        text-align: right;
+    }
+    .save-button-container button {
+        padding: 10px 20px; /* 调小按钮尺寸 */
+        border: none;
+        border-radius: 15px; /* 增大圆角半径 */
+        background-color: #000000;
+        color: white;
+        cursor: pointer;
+        font-size: 16px; /* 调小字体 */
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+    .save-button-container button:hover {
+        background-color: #333333;
+        transform: scale(1.05);
+    }
+    .save-button-container button:active {
+        background-color: #555555;
+        transform: scale(1);
+    }
+</style>
 <div class="container">
     <div class="button-container">
         <button onclick="toggleBold()"><span style="font-weight: bold;">Bold</span></button>
@@ -41,21 +92,11 @@
     <div class="save-button-container">
         <button onclick="saveChanges()">Save Changes</button>
     </div>
-
-    <form id="createTextForm">
-        <div class="form-group">
-            <label for="chineseText" style="font-weight: 500; font-size: 20px;">Text in Chinese</label>
-            <input type="text" class="form-control" id="chineseText" placeholder="Enter Chinese text">
-        </div>
-        <div class="form-group">
-            <label for="englishText" style="font-weight: 500; font-size: 20px;">Text in English</label>
-            <input type="text" class="form-control" id="englishText" placeholder="Enter English text">
-        </div>
-        <button type="button" id="createTextBtn" onclick="createText()">Create Text</button>
-    </form>
 </div>
 
 <script>
+    var selectedText = '';
+
     window.onload = function() {
         var savedStyles = localStorage.getItem('customStyles');
         if (savedStyles) {
@@ -82,18 +123,6 @@
         saveStyles(document.querySelector('style').textContent);
     }
 
-    function createText() {
-        var chineseText = document.getElementById('chineseText').value;
-        var englishText = document.getElementById('englishText').value;
-        
-        var chineseTextHtml = '<div class="mb-3"><div class="user-text" contenteditable="true">' + chineseText + '</div><h5>Text in Chinese</h5></div><hr>';
-        var englishTextHtml = '<div class="mb-3"><div class="user-text" contenteditable="true">' + englishText + '</div><h5>Text in English</h5></div><hr>';
-        document.querySelector('.col-md-8').innerHTML += chineseTextHtml + englishTextHtml;
-
-        document.getElementById('chineseText').value = '';
-        document.getElementById('englishText').value = '';
-    }
-
     function saveChanges() {
         var customDataList = [];
         {% for custom_data in latest_CustomData_list %}
@@ -107,21 +136,21 @@
         {% endfor %}
 
         fetch('{% url "courses:custom_page" %}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON
-            .stringify({'customDataList': customDataList})}).then(response => {
-                if (response.ok) {
-                    alert('Changes saved successfully!');
-                } else {
-                    alert('Failed to save changes.');
-                }
-            }).catch(error => {console.error('Error:', error);});
-        }
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({'customDataList': customDataList})
+        }).then(response => {
+            if (response.ok) {
+                alert('Changes saved successfully!');
+            } else {
+                alert('Failed to save changes.');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    }
 </script>
 {% endblock %}
-        
-        
