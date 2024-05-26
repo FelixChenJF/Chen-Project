@@ -3,11 +3,25 @@ from django import forms
 from .models import Title, Label
 
 class CustomForm(forms.Form):
-    audio1 = forms.FileField(label='Chinese Audio', required=False)
-    text1 = forms.CharField(label='Chinese Text', widget=forms.Textarea, required=False)
-    audio2 = forms.FileField(label='English Audio', required=False)
-    text2 = forms.CharField(label='English Text', widget=forms.Textarea, required=False)
-    message = forms.CharField(label='Comments', widget=forms.Textarea, required=False)
+    class Meta:
+        model = Title
+        fields = ['text1', 'text2', 'label', 'title']
+        labels = {
+            'text1': 'Text1',
+            'text2': 'Text2',
+            'label': 'Label',
+            'title': 'Title',
+        }
+
+class CommentForm(forms.Form):
+    class Meta:
+        model = Title
+        fields = ['message', 'label', 'label', 'title']
+        labels = {
+            'message': 'Message',
+            'label': 'Label',
+            'title': 'Title',
+        }
 
 class TitleForm(forms.ModelForm):
     class Meta:

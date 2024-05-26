@@ -108,15 +108,9 @@ def daily_vocabulary(request):
 
 def custom_page(request):
     label_name = request.GET.get('label')
-
-    if label_name:
-        label = Label.objects.get(label=label_name)
-        latest_CustomData_list = label.custom_data.all()
-    else:
-        latest_CustomData_list = CustomData.objects.all()
-
+    latest_CustomData_list = CustomData.objects.all()
     context = {
-        "latest_CustomData_list": latest_CustomData_list,
+        "Latest_CustomData_list": latest_CustomData_list,
         "Label_name": label_name,
     }
     return render(request, "courses/detailedCourse/custom_page.html", context)

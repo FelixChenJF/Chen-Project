@@ -17,23 +17,25 @@
         <form method="post" action="{% url 'courses:daily_vocabulary' %}">
             {% csrf_token %}
             <div style="text-align: right; margin-bottom: 4px; margin-right: 8px;">
-                <button type="submit" name="delete_titles">Delete Selected</button>
+                <button type="submit" name="delete_titles">Delete Selected Title</button>
             </div>
             <ul>
                 {% for title in latest_Title_list %}
-                    <li data-title="{{ title.title }}">
-                        <label>
-                            <input type="checkbox" name="titles_to_delete" value="{{ title.id }}">
-                            {{ title.title }}
-                            <form method="post" action="{% url 'courses:daily_vocabulary' %}" style="display: inline;">
+                <li data-title="{{ title.title }}">
+                    <label>
+                        <input type="checkbox" name="titles_to_delete" value="{{ title.id }}">
+                        <span id="title-text-{{ title.id }}">{{ title.title }}</span>
+                        <div style="padding-top: 5px;">
+                            <form method="post" action="{% url 'courses:daily_vocabulary' %}" id="edit-title-form-{{ title.id }}">
                                 {% csrf_token %}
                                 <input type="hidden" name="edit_title" value="1">
                                 <input type="hidden" name="title_id" value="{{ title.id }}">
                                 <input type="text" name="new_title" value="{{ title.title }}">
                                 <button type="submit">Save</button>
                             </form>
-                        </label>
-                    </li>
+                        </div>
+                    </label>
+                </li>
                 {% endfor %}
             </ul>
         </form>
@@ -48,29 +50,31 @@
             {{ label_form.title }}
             <button type="submit" style="display: inline-block; margin-left: 16px; margin-top: 14px;">Add Label</button>
         </form>
-
         <form method="post" action="{% url 'courses:daily_vocabulary' %}">
             {% csrf_token %}
-            <div class="label-container">
+            <div class="label-group">
                 {% for label in latest_Label_list %}
-                <div style="display: inline-block; width: 200px; margin: 12px 100px 20px 18px;">
-                        <input type="checkbox" name="labels_to_delete" value="{{ label.id }}">
+                    <div style="padding: 20px; width: 260px; height: 50px;">
                         <span class="label-item" data-foreign-key="{{ label.title }}" style="margin-left: 5px;">
+                            <input type="checkbox" name="labels_to_delete" value="{{ label.id }}">
                             <a href="{% url 'courses:custom_page' %}?label={{ label.label }}" style="text-decoration: none; color: black;">{{ label.label }}</a>
-                            <form method="post" action="{% url 'courses:daily_vocabulary' %}" style="display: inline;">
-                                {% csrf_token %}
-                                <input type="hidden" name="edit_label" value="1">
-                                <input type="hidden" name="label_id" value="{{ label.id }}">
-                                <input type="text" name="new_label" value="{{ label.label }}">
-                                <button type="submit" Style="float: right;">Save</button>
-                            </form>
+                            <div style="padding-top: 5px;">
+                                <form method="post" action="{% url 'courses:daily_vocabulary' %}" id="edit-label-form-{{ label.id }}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="edit_label" value="1">
+                                    <input type="hidden" name="label_id" value="{{ label.id }}">
+                                    <input type="text" name="new_label" value="{{ label.label }}">
+                                    <button type="submit">Save</button>
+                                </form>
+                            </div>
                         </span>
                     </div>
                 {% endfor %}
-                <div style="padding-left: 861px; padding-top: 28px;">
+                <div style="padding-left: 868px; padding-top: 24px;">
                     <button type="submit" name="delete_labels">Delete Selected Label</button>
                 </div>
             </div>
+            
         </form>
     </div> 
 </div>
@@ -81,4 +85,5 @@
 </div>
 {% endif %}
 
+<script src="{% static 'DVPageFunction.js' %}"></script>
 {% endblock %}
