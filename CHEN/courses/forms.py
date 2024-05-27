@@ -1,5 +1,5 @@
 from django import forms
-from .models import Title, Label, CustomData
+from .models import OSLabel, OSTitle, Title, Label, CustomData
 
 class CustomForm(forms.ModelForm):
     class Meta:
@@ -20,6 +20,14 @@ class TitleForm(forms.ModelForm):
             'title': 'Title',
         }
         
+class OSTitleForm(forms.ModelForm):
+    class Meta:
+        model = OSTitle
+        fields = ['OSTitle']
+        labels = {
+            'OSTitle': 'Title',
+        }
+        
 class LabelForm(forms.ModelForm):
     class Meta:
         model = Label
@@ -27,5 +35,14 @@ class LabelForm(forms.ModelForm):
         labels = {
             'label': 'Label',
             'title': 'Title'
+        }
+        
+class OSLabelForm(forms.ModelForm):
+    class Meta:
+        model = OSLabel
+        fields = ['OSLabel', 'OSTitle']
+        labels = {
+            'OSLabel': 'Label',
+            'OSTitle': 'Title'
         }
     

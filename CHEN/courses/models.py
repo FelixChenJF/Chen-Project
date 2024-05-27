@@ -21,6 +21,13 @@ class Title(models.Model):
     def __str__(self):
         return self.title
 
+class OSTitle(models.Model):
+    id = models.AutoField(primary_key=True)
+    OSTitle = models.CharField(max_length=200, null=True)
+
+    def __str__(self):
+        return self.OSTitle
+
 class Label(models.Model):
     id = models.AutoField(primary_key=True)
     label = models.CharField(max_length=200, null=True)
@@ -28,6 +35,14 @@ class Label(models.Model):
 
     def __str__(self):
         return self.label
+    
+class OSLabel(models.Model):
+    id = models.AutoField(primary_key=True)
+    OSLabel = models.CharField(max_length=200, null=True)
+    OSTitle = models.ForeignKey(OSTitle, related_name='OS_labels', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.OSLabel
 class CustomData(models.Model):
     id = models.AutoField(primary_key=True)
     text1 = models.TextField(max_length=100000, null=True, blank=True)

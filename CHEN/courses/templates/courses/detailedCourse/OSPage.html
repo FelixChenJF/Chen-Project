@@ -1,7 +1,87 @@
 {% extends "courses/base.html" %}
 {% block title %}Operating System{% endblock %}
-
 {% block content %}
-Operating System
-{% endblock %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'DVPageStyles.css' %}">
+<div class="table-container">
+    <div class="left-column">
 
+        <form method="post" action="{% url 'courses:OSPage' %}" style="margin-left: 16px;">
+            {% csrf_token %}
+            <input type="hidden" name="title_form" value="1">
+            <span style="display: inline-block;">{{ title_form.as_p }}</span>
+            <button type="submit" style="margin-left: 11px;">Add Title</button>
+        </form>
+        
+        <form method="post" action="{% url 'courses:OSPage' %}">
+            {% csrf_token %}
+            <div style="text-align: right; margin-bottom: 4px; margin-right: 8px;">
+                <button type="submit" name="delete_titles">Delete Selected Title</button>
+            </div>
+            <ul>
+                {% for title in latest_Title_list %}
+                <li data-title="{{ title.OSTitle }}">
+                    <label>
+                        <input type="checkbox" name="titles_to_delete" value="{{ title.id }}">
+                        <span id="title-text-{{ title.id }}">{{ title.OSTitle }}</span>
+
+                        <div style="padding-top: 5px;">
+                            <form method="post" action="{% url 'courses:OSPage' %}" id="edit-title-form-{{ title.id }}">
+                                {% csrf_token %}
+                                <input type="hidden" name="edit_title" value="1">
+                                <input type="hidden" name="title_id" value="{{ title.id }}">
+                                <input type="text" name="new_title" value="{{ title.OSTitle }}">
+                                <button type="submit">Save</button>
+                            </form>
+                        </div>
+                    </label>
+                </li>
+                {% endfor %}
+            </ul>
+        </form>
+    </div>
+    <div class="right-column">
+        <form method="post" action="{% url 'courses:OSPage' %}" style="margin-left: 20px; margin-right: 400px;">
+            {% csrf_token %}
+            <input type="hidden" name="label_form" value="1">
+            <label for="id_label" style="display: inline-block;">Label:</label>
+            {{ label_form.OSLabel }}
+            <label for="id_title" style="display: inline-block; margin-left: 10px;">Title:</label>
+            {{ label_form.OSTitle }}
+            <button type="submit" style="display: inline-block; margin-left: 16px; margin-top: 14px;">Add Label</button>
+        </form>
+        <form method="post" action="{% url 'courses:OSPage' %}">
+            {% csrf_token %}
+            <div class="label-group">
+                {% for label in latest_Label_list %}
+                    <div style="padding: 20px; width: 260px; height: 50px;">
+                        <span class="label-item" data-foreign-key="{{ label.OSTitle }}" style="margin-left: 5px;">
+                            <input type="checkbox" name="labels_to_delete" value="{{ label.id }}">
+                            <a style="text-decoration: none; color: black;">{{ label.OSLabel }}</a>
+                            <div style="padding-top: 5px;">
+                                <form method="post" action="{% url 'courses:OSPage' %}" id="edit-label-form-{{ label.id }}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="edit_label" value="1">
+                                    <input type="hidden" name="label_id" value="{{ label.id }}">
+                                    <input type="text" name="new_label" value="{{ label.OSLabel }}">
+                                    <button type="submit">Save</button>
+                                </form>
+                            </div>
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+            <div style="padding-left: 864px;">
+                <button type="submit" name="delete_labels">Delete Selected Label</button>
+            </div>
+        </form>
+    </div> 
+</div>
+
+{% if error_message %}
+<div style="color: red; margin-top: 20px;">
+    {{ error_message }}
+</div>
+{% endif %}
+<script src="{% static 'DVPageFunction.js' %}"></script>
+{% endblock %}
