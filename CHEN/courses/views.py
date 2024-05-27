@@ -140,3 +140,4 @@ def custom_page(request):
         'label_name': label_name,
     }
     return render(request, 'courses/detailedCourse/custom_page.html', context)
+

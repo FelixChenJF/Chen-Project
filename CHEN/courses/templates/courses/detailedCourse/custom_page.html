@@ -19,11 +19,11 @@
         margin: 0 5px;
         padding: 5px 10px;
         border: none;
-        border-radius: 10px; /* 增大圆角半径 */
+        border-radius: 10px;
         background-color: #000000;
         color: white;
         cursor: pointer;
-        font-size: 14px; /* 调小字体 */
+        font-size: 14px;
     }
     .button-container button:hover {
         background-color: #0056b3;
@@ -69,25 +69,32 @@
     </div>
     <hr>
     <div class="row">
-        <div class="col-md-8">
-            <em><h3><strong>{{ label_name }}</strong></h3></em>
-            {% for custom_data in latest_CustomData_list %}
-                <div class="mb-3">
-                    <h5>Text in Chinese</h5>
-                    <div id="chineseText{{ forloop.counter }}" class="user-text" contenteditable="true">{{ custom_data.text1|safe }}</div>
+        <div style="padding-left: 16px;"><em><h3><strong>{{ label_name }}</strong></h3></em></div>
+        {% for custom_data in latest_CustomData_list %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <h5>Text in Chinese</h5>
+                        <div id="chineseText{{ forloop.counter }}" class="user-text" contenteditable="true">{{ custom_data.text1|safe }}</div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <h5>Text in English</h5>
+                        <div id="englishText{{ forloop.counter }}" class="user-text" contenteditable="true">{{ custom_data.text2|safe }}</div>
+                    </div>
+                    <hr>
                 </div>
-                <hr>
-                <div class="mb-3">
-                    <h5>Text in English</h5>
-                    <div id="englishText{{ forloop.counter }}" class="user-text" contenteditable="true">{{ custom_data.text2|safe }}</div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <h5>Comment</h5>
+                        <div id="message{{ forloop.counter }}" class="user-text" contenteditable="true">{{ custom_data.message|safe }}</div>
+                    </div>
+                    <hr>
                 </div>
-                <hr>
-            {% endfor %}
+            </div>
         </div>
-        <div class="col-md-4">
-            <h5>Comments</h5>
-            <div id="comments" class="user-text" contenteditable="true">Comments</div>
-        </div>
+        {% endfor %}
     </div>
     <div class="save-button-container">
         <button onclick="saveChanges()">Save Changes</button>
@@ -96,7 +103,7 @@
     <form method="POST" action="{% url 'courses:custom_page' %}">
         {% csrf_token %}
         <div class="row">
-            <div style="display: flex; flex-direction: row; align-items: center;">
+            <div style="display: flex; flex-direction: row;">
                 <div style="margin-right: 10px;padding: 5px;">
                     <label for="{{ form.text1.id_for_label }}" class="form-label" style="font-weight: bold;">{{ form.text1.label }}</label> 
                     <div style="background-color: #f2f2f2; padding: 10px;">
@@ -109,16 +116,24 @@
                         {{ form.text2 }}
                     </div>
                 </div>
-                <div style="margin-right: 10px; padding: 5px;">
+            </div> 
+            <div style="display: flex; flex-direction: row;">
+                <div style="margin-right: 80px; padding: 5px;">
+                    <label for="{{ form.message.id_for_label }}" class="form-label" style="font-weight: bold;">{{ form.message.label }}</label>
+                    <div style="background-color: #f2f2f2; padding: 10px;">
+                        {{ form.message }}
+                    </div>
+                </div>
+                <div style="margin-right: 12px; padding-top: 32px;">
                     <label for="{{ form.label.id_for_label }}" class="form-label" style="font-weight: bold;">{{ form.label.label }}</label>
                     {{ form.label }}
                 </div>
-                <div style="padding-left: 20px; padding-bottom: 24px;">
+                <div style="padding-left: 20px;">
                     <div class="save-button-container">
-                        <button type="submit" style="white-space: nowrap; padding: 10px 24px;">Add New Text</button>
+                        <button type="submit" style="white-space: nowrap; padding: 8px 20px;">Add New Text</button>
                     </div>
                 </div>
-            </div>                     
+            </div>                  
         </div>
     </form>
 </div>
@@ -157,13 +172,15 @@
         {% for custom_data in latest_CustomData_list %}
             var chineseText = document.getElementById('chineseText{{ forloop.counter }}').innerHTML;
             var englishText = document.getElementById('englishText{{ forloop.counter }}').innerHTML;
+            var message = document.getElementById('message{{ forloop.counter }}').innerHTML;
             customDataList.push({
                 'id': {{ custom_data.id }},
                 'text1': chineseText,
-                'text2': englishText
+                'text2': englishText,
+                'message': message
             });
         {% endfor %}
-
+    
         fetch('{% url "courses:custom_page" %}', {
             method: 'POST',
             headers: {
