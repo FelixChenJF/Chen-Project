@@ -108,7 +108,6 @@ def daily_vocabulary(request):
     
     return render(request, 'courses/detailedCourse/daily_vocabulary.html', context)
 
-@csrf_exempt
 def custom_page(request):
     if request.method == 'POST':
         if request.content_type == 'application/json':
@@ -119,6 +118,7 @@ def custom_page(request):
                     custom_data_obj = CustomData.objects.get(id=custom_data['id'])
                     custom_data_obj.text1 = custom_data['text1']
                     custom_data_obj.text2 = custom_data['text2']
+                    custom_data_obj.message = custom_data['message']
                     custom_data_obj.save()
                 except CustomData.DoesNotExist:
                     continue

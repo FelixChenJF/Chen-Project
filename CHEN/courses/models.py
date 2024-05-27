@@ -29,19 +29,14 @@ class Label(models.Model):
     def __str__(self):
         return self.label
 class CustomData(models.Model):
+    id = models.AutoField(primary_key=True)
     text1 = models.TextField(max_length=100000, null=True, blank=True)
     text2 = models.TextField(max_length=100000, null=True, blank=True)
+    message = models.TextField(max_length=100000, null=True, blank=True)
     label = models.ForeignKey(Label, related_name='custom_data', on_delete=models.CASCADE)
     
     def __str__(self):
         return self.text1
-    
-class CommentData(models.Model):
-    message = models.TextField(max_length=1000, null=True, blank=True)
-    label = models.ForeignKey(Label, related_name='comment_data', on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.message
     
     
     

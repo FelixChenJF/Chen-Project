@@ -37,13 +37,13 @@
         text-align: right;
     }
     .save-button-container button {
-        padding: 10px 20px; /* 调小按钮尺寸 */
+        padding: 10px 20px;
         border: none;
-        border-radius: 15px; /* 增大圆角半径 */
+        border-radius: 15px;
         background-color: #000000;
         color: white;
         cursor: pointer;
-        font-size: 16px; /* 调小字体 */
+        font-size: 16px;
         font-weight: bold;
         transition: background-color 0.3s, transform 0.3s;
     }
@@ -92,6 +92,35 @@
     <div class="save-button-container">
         <button onclick="saveChanges()">Save Changes</button>
     </div>
+    <hr>
+    <form method="POST" action="{% url 'courses:custom_page' %}">
+        {% csrf_token %}
+        <div class="row">
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <div style="margin-right: 10px;padding: 5px;">
+                    <label for="{{ form.text1.id_for_label }}" class="form-label" style="font-weight: bold;">{{ form.text1.label }}</label> 
+                    <div style="background-color: #f2f2f2; padding: 10px;">
+                        {{ form.text1 }}
+                    </div>
+                </div>
+                <div style="margin-right: 10px; padding: 5px;">
+                    <label for="{{ form.text2.id_for_label }}" class="form-label" style="font-weight: bold;">{{ form.text2.label }}</label>
+                    <div style="background-color: #f2f2f2; padding: 10px;">
+                        {{ form.text2 }}
+                    </div>
+                </div>
+                <div style="margin-right: 10px; padding: 5px;">
+                    <label for="{{ form.label.id_for_label }}" class="form-label" style="font-weight: bold;">{{ form.label.label }}</label>
+                    {{ form.label }}
+                </div>
+                <div style="padding-left: 20px; padding-bottom: 24px;">
+                    <div class="save-button-container">
+                        <button type="submit" style="white-space: nowrap; padding: 10px 24px;">Add New Text</button>
+                    </div>
+                </div>
+            </div>                     
+        </div>
+    </form>
 </div>
 
 <script>
