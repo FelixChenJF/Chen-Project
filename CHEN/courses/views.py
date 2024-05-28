@@ -1,6 +1,6 @@
 import json
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
 from django.http import HttpResponse, JsonResponse
 from .forms import *
@@ -98,54 +98,15 @@ def OSPage(request):
 
 def OScustom_page(request):
     if request.method == 'POST':
-        if request.content_type == 'application/json':
-            data = json.loads(request.body)
-            custom_data_list = data.get('customDataList', [])
-            for custom_data in custom_data_list:
-                try:
-                    custom_data_obj = OSCustomData.objects.get(id=custom_data['id'])
-                    custom_data_obj.OSText = custom_data['OSText']
-                    custom_data_obj.OSImage = custom_data['OSImage']
-                    custom_data_obj.save()
-                except OSCustomData.DoesNotExist:
-                    continue
-            return JsonResponse({'status': 'success'})
-        else:
-            form = OSCustomDataForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect('courses:OScustom_page')
-    else:
-        form = OSCustomDataForm()
-
-    OSLabel_name = request.GET.get('OSLabel')
-    latest_CustomData_list = OSCustomData.objects.filter(OSLabel__label=OSLabel_name) if OSLabel_name else OSCustomData.objects.all()
-    context = {
-        'form': form,
-        'latest_CustomData_list': latest_CustomData_list,
-        'OSlabel_name': OSLabel_name,
-    }
-    return render(request, 'courses/detailedCourse/OScustom_page.html', context)
-
-def OScustom_page(request):
-    if request.method == 'POST':
-        if request.content_type == 'application/json':
-            data = json.loads(request.body)
-            custom_data_list = data.get('customDataList', [])
-            for custom_data in custom_data_list:
-                try:
-                    custom_data_obj = OSCustomData.objects.get(id=custom_data['id'])
-                    custom_data_obj.OSText = custom_data['OSText']
-                    custom_data_obj.OSImage = custom_data['OSImage']
-                    custom_data_obj.save()
-                except OSCustomData.DoesNotExist:
-                    continue
-            return JsonResponse({'status': 'success'})
-        else:
-            OSForm = OSCustomDataForm(request.POST, request.FILES)
-            if OSForm.is_valid():
-                OSForm.save()
-                return redirect('courses:OScustom_page')
+        OSForm = OSCustomDataForm(request.POST, request.FILES)
+        if OSForm.is_valid():
+            os_label_name = request.POST.get('OSLabel')
+            os_label = get_object_or_404(OSLabel, OSLabel=os_label_name)
+            
+            os_custom_data = OSForm.save(commit=False)
+            os_custom_data.OSLabel = os_label
+            os_custom_data.save()
+            return redirect('courses:OScustom_page')
     else:
         OSForm = OSCustomDataForm()
 
@@ -162,6 +123,7 @@ def OScustom_page(request):
         'label_name': OSLabel_name,
     }
     return render(request, 'courses/detailedCourse/OScustom_page.html', context)
+
 def EDPage(request):
 
     return render(request, 'courses/detailedCourse/EDPage.html')
