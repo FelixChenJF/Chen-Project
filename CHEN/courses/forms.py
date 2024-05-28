@@ -49,5 +49,10 @@ class OSLabelForm(forms.ModelForm):
 class OSCustomDataForm(forms.ModelForm):
     class Meta:
         model = OSCustomData
-        fields = ['OSText', 'OSImage', 'OSLabel']
+        fields = ['OSImage','OSText','OSLabel']
+        labels = {
+            'OSImage': 'Image',
+            'OSText': 'Text',
+            'OSLabel': 'Label'
+        }
     

@@ -2,11 +2,24 @@
 {% block title %}OScustom_page{% endblock %}
 
 {% block content %}
-OScustom_page
-<h2>Upload Image</h2>
+{{ label_name }}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Submit</button>
+        <button type="submit">Add Custom Data</button>
     </form>
+
+    <h2>Custom Data List</h2>
+    <ul>
+        {% for data in latest_CustomData_list %}
+            <li>
+                {% if data.OSImage %}
+                    <img src="{{ data.OSImage.url }}" alt="OS Image" width="100">
+                {% endif %}
+                <p>{{ data.OSText }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'courses:OSPage' %}">Back to OS Page</a>
 {% endblock %}
