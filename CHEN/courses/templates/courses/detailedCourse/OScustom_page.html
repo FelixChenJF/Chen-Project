@@ -17,10 +17,5 @@
         </div>
         {% endfor %}
     </div>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Add Custom Data</button>
-    </form>
     <a href="{% url 'courses:technical_terms' %}">Back to Techical Page</a>
 {% endblock %}
