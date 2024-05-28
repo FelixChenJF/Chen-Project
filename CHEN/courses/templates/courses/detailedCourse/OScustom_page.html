@@ -2,24 +2,25 @@
 {% block title %}OScustom_page{% endblock %}
 
 {% block content %}
-{{ label_name }}
+<div style="padding-left: 16px;"><em><h1><strong>{{ label_name }}</strong></h1></em></div>
+    <div style="display: flex; flex-direction: column;">
+        {% for data in latest_CustomData_list %}
+        <div style="display: flex;">
+            <div style="flex: 1; padding-right: 40px;" >
+                {% if data.OSImage %}
+                    <img src="{{ data.OSImage.url }}" alt="OS Image" style="max-width: 100%;">
+                {% endif %}
+            </div>
+            <div style="flex: 1;">
+                <span>{{ data.OSText }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Add Custom Data</button>
     </form>
-
-    <h2>Custom Data List</h2>
-    <ul>
-        {% for data in latest_CustomData_list %}
-            <li>
-                {% if data.OSImage %}
-                    <img src="{{ data.OSImage.url }}" alt="OS Image" width="100">
-                {% endif %}
-                <p>{{ data.OSText }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-
-    <a href="{% url 'courses:OSPage' %}">Back to OS Page</a>
+    <a href="{% url 'courses:technical_terms' %}">Back to Techical Page</a>
 {% endblock %}

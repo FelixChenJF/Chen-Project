@@ -2,7 +2,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
-from django.http import HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from .forms import *
 from .models import *
 
@@ -31,6 +31,46 @@ def SPPage(request):
     return render(request, 'courses/detailedCourse/SPPage.html')
 
 def OSPage(request):
+    
+    return render(request, 'courses/detailedCourse/OSPage.html')
+
+def OScustom_page(request):
+    if request.method == 'POST':
+        OSForm = OSCustomDataForm(request.POST, request.FILES)
+        if OSForm.is_valid():
+            os_label_name = request.POST.get('OSLabel')
+            try:
+                os_label = OSLabel.objects.get(OSLabel=os_label_name)
+            except OSLabel.DoesNotExist:
+                raise Http404("OSLabel does not exist")
+
+            os_custom_data = OSForm.save(commit=False)
+            os_custom_data.OSLabel = os_label
+            os_custom_data.save()
+            return redirect('courses:OScustom_page')
+    else:
+        OSForm = OSCustomDataForm()
+
+    OSLabel_name = request.GET.get('OSLabel')
+
+    if OSLabel_name:
+        latest_CustomData_list = OSCustomData.objects.filter(OSLabel__OSLabel=OSLabel_name)
+    else:
+        latest_CustomData_list = OSCustomData.objects.all()
+
+    context = {
+        'form': OSForm,
+        'latest_CustomData_list': latest_CustomData_list,
+        'label_name': OSLabel_name,
+    }
+    return render(request, 'courses/detailedCourse/OScustom_page.html', context)
+
+
+def EDPage(request):
+
+    return render(request, 'courses/detailedCourse/EDPage.html')
+
+def technical_terms(request):
     error_message = None
 
     if request.method == 'POST':
@@ -38,19 +78,19 @@ def OSPage(request):
             titles_to_delete = request.POST.getlist('titles_to_delete')
             if titles_to_delete:
                 OSTitle.objects.filter(id__in=titles_to_delete).delete()
-            return redirect('courses:OSPage')
+            return redirect('courses:technical_terms')
 
         if 'delete_labels' in request.POST:
             labels_to_delete = request.POST.getlist('labels_to_delete')
             if labels_to_delete:
                 OSLabel.objects.filter(id__in=labels_to_delete).delete()
-            return redirect('courses:OSPage')
+            return redirect('courses:technical_terms')
 
         if 'title_form' in request.POST:
             title_form = OSTitleForm(request.POST)
             if title_form.is_valid():
                 title_form.save()
-                return redirect('courses:OSPage')
+                return redirect('courses:technical_terms')
             label_form = OSLabelForm()
 
         elif 'label_form' in request.POST:
@@ -61,14 +101,14 @@ def OSPage(request):
                     error_message = f"The label '{new_label}' already exists."
                 else:
                     label_form.save()
-                    return redirect('courses:OSPage')
+                    return redirect('courses:technical_terms')
             title_form = OSTitleForm()
 
         elif 'edit_title' in request.POST:
             title_id = request.POST.get('title_id')
             new_title = request.POST.get('new_title')
             OSTitle.objects.filter(id=title_id).update(OSTitle=new_title)
-            return redirect('courses:OSPage')
+            return redirect('courses:technical_terms')
 
         elif 'edit_label' in request.POST:
             label_id = request.POST.get('label_id')
@@ -77,7 +117,7 @@ def OSPage(request):
                 error_message = f"The label '{new_label}' already exists."
             else:
                 OSLabel.objects.filter(id=label_id).update(OSLabel=new_label)
-            return redirect('courses:OSPage')
+            return redirect('courses:technical_terms')
 
     else:
         title_form = OSTitleForm()
@@ -94,44 +134,7 @@ def OSPage(request):
         "error_message": error_message
     }
     
-    return render(request, 'courses/detailedCourse/OSPage.html', context)
-
-def OScustom_page(request):
-    if request.method == 'POST':
-        OSForm = OSCustomDataForm(request.POST, request.FILES)
-        if OSForm.is_valid():
-            os_label_name = request.POST.get('OSLabel')
-            os_label = get_object_or_404(OSLabel, OSLabel=os_label_name)
-            
-            os_custom_data = OSForm.save(commit=False)
-            os_custom_data.OSLabel = os_label
-            os_custom_data.save()
-            return redirect('courses:OScustom_page')
-    else:
-        OSForm = OSCustomDataForm()
-
-    OSLabel_name = request.GET.get('OSLabel')
-    
-    if OSLabel_name:
-        latest_CustomData_list = OSCustomData.objects.filter(OSLabel__OSLabel=OSLabel_name)
-    else:
-        latest_CustomData_list = OSCustomData.objects.all()
-
-    context = {
-        'form': OSForm,
-        'latest_CustomData_list': latest_CustomData_list,
-        'label_name': OSLabel_name,
-    }
-    return render(request, 'courses/detailedCourse/OScustom_page.html', context)
-
-def EDPage(request):
-
-    return render(request, 'courses/detailedCourse/EDPage.html')
-
-def technical_terms(request):
-    
-    return render(request, 'courses/detailedCourse/technical_terms.html')
-
+    return render(request, 'courses/detailedCourse/technical_terms.html', context)
 def daily_vocabulary(request):
     error_message = None
 

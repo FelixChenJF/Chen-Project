@@ -1,18 +1,13 @@
 from django.db import models
 
-# Create your models here.
 class Course(models.Model):
     id = models.AutoField(primary_key=True)
     courseName = models.CharField(max_length=200)
     imagePath = models.CharField(max_length=200)
     description = models.TextField()
-    linkPath = models.CharField(max_length=200, null=True)
-    labels = models.CharField(max_length=200, null=True)
 
     def __str__(self):
         return self.courseName
-
-from django.db import models
 
 class Title(models.Model):
     id = models.AutoField(primary_key=True)
@@ -57,7 +52,7 @@ class CustomData(models.Model):
 class OSCustomData(models.Model):
     id = models.AutoField(primary_key=True)
     OSText = models.TextField(max_length=100000, null=True, blank=True)
-    OSImage = models.ImageField(upload_to='courses/static/OSimages/', null=True, blank=True)
+    OSImage = models.ImageField(upload_to='OScustom_images/', null=True, blank=True)
     OSLabel = models.ForeignKey(OSLabel, related_name='OScustom_data', on_delete=models.CASCADE)
     
     def __str__(self):

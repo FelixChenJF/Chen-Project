@@ -20,9 +20,7 @@
             <table>
                 <tr>
                     <td class="course-image">
-                        <a href="{% url 'courses:'|add:course.linkPath %}">
-                            <img src="{% static course.imagePath %}" alt="{{ course.courseName }}" style="width: 560px; height: 460px; border-radius: 10px; box-shadow: -1px -2px 4px rgba(0, 0, 0, 0.1);">
-                        </a>
+                        <img src="{% static course.imagePath %}" alt="{{ course.courseName }}" style="width: 560px; height: 460px; border-radius: 10px; box-shadow: -1px -2px 4px rgba(0, 0, 0, 0.1);">
                     </td>
                     <td class="course-description" style="text-align: justify;">
                         {{ course.description }}
