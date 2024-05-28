@@ -15,3 +15,9 @@ urlpatterns = [
     path('EDPage/daily_vocabulary/', views.daily_vocabulary, name='daily_vocabulary'), 
     path('EDPage/daily_vocabulary/custom_page/', views.custom_page, name='custom_page'),
 ]
+
+urlpatterns = [
+    path('', views.homePage, name='homePage'),
+    path('OSPage', views.OSPage, name='OSPage'),
+    path('OSPage/OScustom_Page/', views.OScustom_page, name='OSPage'),
+]

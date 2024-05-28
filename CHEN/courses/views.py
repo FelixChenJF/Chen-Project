@@ -3,8 +3,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect, render
 from django.template import loader
 from django.http import HttpResponse, JsonResponse
-from .forms import CustomForm, LabelForm, OSLabelForm, OSTitleForm, TitleForm
-from .models import Course, CustomData, OSLabel, OSTitle, Title, Label
+from .forms import *
+from .models import *
 
 def homePage(request):
     latest_course_list = Course.objects.all()
@@ -95,6 +95,19 @@ def OSPage(request):
     }
     
     return render(request, 'courses/detailedCourse/OSPage.html', context)
+
+def OScustom_page(request):
+    if request.method == 'POST':
+        form = OSCustomDataForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('courses:OScustom_page')
+    else:
+        form = OSCustomDataForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'courses/detailedCourse/OScustom_page.html', context)
 
 def custom_page(request):
     if request.method == 'POST':

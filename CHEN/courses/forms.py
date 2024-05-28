@@ -1,5 +1,5 @@
 from django import forms
-from .models import OSLabel, OSTitle, Title, Label, CustomData
+from .models import *
 
 class CustomForm(forms.ModelForm):
     class Meta:
@@ -45,4 +45,9 @@ class OSLabelForm(forms.ModelForm):
             'OSLabel': 'Label',
             'OSTitle': 'Title'
         }
+        
+class OSCustomDataForm(forms.ModelForm):
+    class Meta:
+        model = OSCustomData
+        fields = ['OSText', 'OSImage', 'OSLabel']
     

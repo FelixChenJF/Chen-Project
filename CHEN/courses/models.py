@@ -53,5 +53,15 @@ class CustomData(models.Model):
     def __str__(self):
         return self.text1
     
+
+class OSCustomData(models.Model):
+    id = models.AutoField(primary_key=True)
+    OSText = models.TextField(max_length=100000, null=True, blank=True)
+    OSImage = models.ImageField(upload_to='static/OSimages/', null=True, blank=True)
+    OSLabel = models.ForeignKey(Label, related_name='OScustom_data', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.OSText
+    
     
     
