@@ -6,12 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
         courseName.addEventListener('click', function() {
             const courseId = this.getAttribute('data-course-id');
 
-            // Hide all course details
             courseDetails.forEach(detail => {
                 detail.style.display = 'none';
             });
 
-            // Show the selected course detail
             const selectedCourse = document.getElementById(`course-${courseId}`);
             if (selectedCourse) {
                 selectedCourse.style.display = 'block';
