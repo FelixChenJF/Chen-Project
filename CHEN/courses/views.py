@@ -35,10 +35,16 @@ def OSPage(request):
     return render(request, 'courses/detailedCourse/OSPage.html')
 
 
-
 def OScustom_page(request):
     if request.method == 'POST':
-        if 'delete' in request.POST:
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+            for item in data.get('customDataList', []):
+                custom_data = OSCustomData.objects.get(id=item['id'])
+                custom_data.OSText = item['message']
+                custom_data.save()
+            return redirect(request.path)
+        elif 'delete' in request.POST:
             delete_id = request.POST.get('delete_id')
             custom_data = get_object_or_404(OSCustomData, id=delete_id)
             custom_data.delete()
@@ -49,6 +55,7 @@ def OScustom_page(request):
                 os_custom_data = OSForm.save(commit=False)
                 os_custom_data.save()
                 return redirect(f'{request.path}?OSLabel={os_custom_data.OSLabel.OSLabel}')
+
     else:
         OSForm = OSCustomDataForm()
 
@@ -64,7 +71,6 @@ def OScustom_page(request):
         'label_name': OSLabel_name,
     }
     return render(request, 'courses/detailedCourse/OScustom_page.html', context)
-
 
 def EDPage(request):
 

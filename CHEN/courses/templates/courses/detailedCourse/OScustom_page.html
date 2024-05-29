@@ -2,10 +2,42 @@
 {% block title %}OScustom_page{% endblock %}
 
 {% block content %}
+<style>
+    .button-container {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .button-container button {
+        margin: 0 5px;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #000000;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .button-container button:hover {
+        background-color: #0056b3;
+    }
+</style>
 <div style="padding-left: 16px;">
     <em><h1><strong>{{ label_name }}</strong></h1></em>
 </div>
-
+<div class="button-container">
+    <button onclick="toggleBold()"><span style="font-weight: bold;">Bold</span></button>
+    <button onclick="toggleItalic()"><span style="font-style: italic;">Italic</span></button>
+    <div>
+        <button onclick="changeTextColor('red')" style="background-color: red; color: white;">Red</button>
+        <button onclick="changeTextColor('blue')" style="background-color: blue; color: white;">Blue</button>
+        <button onclick="changeTextColor('green')" style="background-color: green; color: white;">Green</button>
+        <button onclick="changeTextColor('black')" style="background-color: black; color: white;">Black</button>
+    </div>
+</div>
+<hr>
 <div style="display: flex; flex-direction: column;">
     {% for data in latest_CustomData_list %}
     <div style="display: flex; margin-bottom: 20px;">
@@ -15,7 +47,9 @@
             {% endif %}
         </div>
         <div style="flex: 1;">
-            <span>{{ data.OSText }}</span>
+            <span contenteditable="true" id="message{{ forloop.counter }}">
+                {{ data.OSText }}
+            </span>
         </div>
         <div>
             <form method="post" enctype="multipart/form-data">
@@ -29,8 +63,10 @@
     </div>
     {% endfor %}
 </div>
-
-<form method="post" enctype="multipart/form-data" style="display: flex; flex-wrap: wrap; padding-top: 20px;">
+<div style="padding-right: 52px;">   
+    <button onclick="saveChanges()" style="margin-top: 20px; background-color: black; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: 700; font-size: 14px; float: right;">Save Changes</button>
+</div>
+    <form method="post" enctype="multipart/form-data" style="display: flex; flex-wrap: wrap; padding-top: 20px;">
     {% csrf_token %}
     <div style="flex: 1; margin-right: -160px;">
         <strong>Label: </strong>{{ form.OSLabel }}
@@ -46,5 +82,69 @@
     </div>
 </form>
 
-<a href="{% url 'courses:technical_terms' %}" style="text-decoration: none; color: inherit; float: right; padding-right: 320px;">Back to Technical Page</a>
+<script>
+    window.onload = function() {
+        var savedStyles = localStorage.getItem('customStyles');
+        if (savedStyles) {
+            document.querySelector('style').textContent = savedStyles;
+        }
+
+        {% for custom_data in latest_CustomData_list %}
+            var messageElement = document.getElementById('message{{ forloop.counter }}');
+            messageElement.innerHTML = messageElement.textContent;
+        {% endfor %}
+    }
+
+    function saveStyles(styles) {
+        localStorage.setItem('customStyles', styles);
+    }
+
+    function toggleBold() {
+        document.execCommand('bold');
+        saveStyles(document.querySelector('style').textContent);
+    }
+
+    function toggleItalic() {
+        document.execCommand('italic');
+        saveStyles(document.querySelector('style').textContent);
+    }
+
+    function changeTextColor(color) {
+        document.execCommand('foreColor', false, color);
+        saveStyles(document.querySelector('style').textContent);
+    }
+
+    function saveChanges() {
+        var customDataList = [];
+        {% for custom_data in latest_CustomData_list %}
+            var message = document.getElementById('message{{ forloop.counter }}').innerHTML; 
+            customDataList.push({
+                'id': {{ custom_data.id }},
+                'message': message
+            });
+        {% endfor %}
+      
+        fetch('{% url "courses:OScustom_page" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({'customDataList': customDataList})
+        }).then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error('Failed to save changes.');
+            }
+        }).then(data => {
+            alert('Changes saved successfully!');
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Failed to save changes.');
+        });
+    }
+</script>
+
+<a href="{% url 'courses:technical_terms' %}" style="text-decoration: none; color: inherit; float: right; padding-right: 50px;">Back to Technical Page</a>
 {% endblock %}
