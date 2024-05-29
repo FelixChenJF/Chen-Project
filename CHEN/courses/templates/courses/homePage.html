@@ -2,8 +2,38 @@
 
 {% block title %}Courses{% endblock %}
 {% block content %}
+<style>
+    .rounded-box {
+        padding: 8px;
+        width: 95%;
+        height: auto;
+    }
+    
+    table {
+        width: 100%;
+    }
+    
+    td {
+        padding: 18px;
+        text-align: center;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    
+    .course-detail table {
+        width: 100%;
+    }
+    
+    .course-image, .course-description {
+        width: 50%;
+        vertical-align: top;
+    }
+    
+    .course-image img {
+        max-width: 100%;
+        height: auto;
+    }    
+</style>
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'homePageStyles.css' %}">
 <div class="rounded-box">
     <table>
         <tr>
@@ -30,5 +60,25 @@
         {% endfor %}
     </div>
 </div>
-<script src="{% static 'homePageFunction.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const courseNames = document.querySelectorAll('.course-name');
+        const courseDetails = document.querySelectorAll('.course-detail');
+    
+        courseNames.forEach(courseName => {
+            courseName.addEventListener('click', function() {
+                const courseId = this.getAttribute('data-course-id');
+    
+                courseDetails.forEach(detail => {
+                    detail.style.display = 'none';
+                });
+    
+                const selectedCourse = document.getElementById(`course-${courseId}`);
+                if (selectedCourse) {
+                    selectedCourse.style.display = 'block';
+                }
+            });
+        });
+    }); 
+</script>
 {% endblock %}
