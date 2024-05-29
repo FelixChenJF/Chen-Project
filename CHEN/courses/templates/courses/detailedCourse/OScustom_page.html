@@ -2,25 +2,49 @@
 {% block title %}OScustom_page{% endblock %}
 
 {% block content %}
-<div style="padding-left: 16px;"><em><h1><strong>{{ label_name }}</strong></h1></em></div>
-    <div style="display: flex; flex-direction: column;">
-        {% for data in latest_CustomData_list %}
-        <div style="display: flex;">
-            <div style="flex: 1; padding-right: 40px;" >
-                {% if data.OSImage %}
-                    <img src="{{ data.OSImage.url }}" alt="OS Image" style="max-width: 100%;">
-                {% endif %}
-            </div>
-            <div style="flex: 1;">
-                <span>{{ data.OSText }}</span>
-            </div>
+<div style="padding-left: 16px;">
+    <em><h1><strong>{{ label_name }}</strong></h1></em>
+</div>
+
+<div style="display: flex; flex-direction: column;">
+    {% for data in latest_CustomData_list %}
+    <div style="display: flex; margin-bottom: 20px;">
+        <div style="flex: 1; padding-right: 40px;">
+            {% if data.OSImage %}
+                <img src="{{ data.OSImage.url }}" alt="OS Image" style="max-width: 100%;">
+            {% endif %}
         </div>
-        {% endfor %}
+        <div style="flex: 1;">
+            <span>{{ data.OSText }}</span>
+        </div>
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="delete_id" value="{{ data.id }}">
+                <div style="padding-right: 60px;">
+                  <button type="submit" name="delete" style="margin-left: 20px; background-color: red; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: 700; font-size: 14px;">Delete</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
-    <a href="{% url 'courses:technical_terms' %}">Back to Techical Page</a>
+    {% endfor %}
+</div>
+
+<form method="post" enctype="multipart/form-data" style="display: flex; flex-wrap: wrap; padding-top: 20px;">
+    {% csrf_token %}
+    <div style="flex: 1; margin-right: -160px;">
+        <strong>Label: </strong>{{ form.OSLabel }}
+    </div>
+    <div style="flex: 1; padding-right: 10px;">
+        <strong>Comments: </strong>{{ form.OSText }}
+    </div>
+    <div style="flex: 1; margin-right: -120px;">
+        <strong>Image: {{ form.OSImage }}</strong>
+    </div>
+    <div style="flex: 1;">
+        <button type="submit" style="background-color: black; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: 700; font-size: 14px;">Submit</button>
+    </div>
+</form>
+
+<a href="{% url 'courses:technical_terms' %}" style="text-decoration: none; color: inherit; float: right; padding-right: 320px;">Back to Technical Page</a>
 {% endblock %}
