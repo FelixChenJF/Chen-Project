@@ -34,25 +34,19 @@ def OSPage(request):
     
     return render(request, 'courses/detailedCourse/OSPage.html')
 
+
+
 def OScustom_page(request):
     if request.method == 'POST':
         OSForm = OSCustomDataForm(request.POST, request.FILES)
         if OSForm.is_valid():
-            os_label_name = request.POST.get('OSLabel')
-            try:
-                os_label = OSLabel.objects.get(OSLabel=os_label_name)
-            except OSLabel.DoesNotExist:
-                raise Http404("OSLabel does not exist")
-
             os_custom_data = OSForm.save(commit=False)
-            os_custom_data.OSLabel = os_label
             os_custom_data.save()
-            return redirect('courses:OScustom_page')
+            return redirect(f'{request.path}?OSLabel={os_custom_data.OSLabel.OSLabel}')
     else:
         OSForm = OSCustomDataForm()
 
     OSLabel_name = request.GET.get('OSLabel')
-
     if OSLabel_name:
         latest_CustomData_list = OSCustomData.objects.filter(OSLabel__OSLabel=OSLabel_name)
     else:
@@ -64,6 +58,7 @@ def OScustom_page(request):
         'label_name': OSLabel_name,
     }
     return render(request, 'courses/detailedCourse/OScustom_page.html', context)
+
 
 
 def EDPage(request):
