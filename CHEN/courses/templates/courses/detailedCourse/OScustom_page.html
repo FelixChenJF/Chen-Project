@@ -53,11 +53,11 @@
                 </span>
             </div>
             <div>
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data" onsubmit="return confirmDelete()">
                     {% csrf_token %}
                     <input type="hidden" name="delete_id" value="{{ data.id }}">
                     <div style="padding-right: 60px;">
-                    <button type="submit" name="delete" style="margin-left: 20px; background-color: red; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: 700; font-size: 14px;">Delete</button>
+                        <button type="submit" name="delete" style="margin-left: 20px; background-color: red; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: 700; font-size: 14px;">Delete</button>
                     </div>
                 </form>
             </div>
@@ -67,7 +67,7 @@
     <div style="padding-right: 52px;">   
         <button onclick="saveChanges()" style="margin-top: 20px; background-color: black; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: 700; font-size: 14px; float: right;">Save Changes</button>
     </div>
-        <form method="post" enctype="multipart/form-data" style="display: flex; flex-wrap: wrap; padding-top: 20px;">
+    <form method="post" enctype="multipart/form-data" style="display: flex; flex-wrap: wrap; padding-top: 20px;">
         {% csrf_token %}
         <div style="flex: 1; margin-right: -160px;">
             <strong>Label: </strong>{{ form.OSLabel }}
@@ -145,6 +145,10 @@
             console.error('Error:', error);
             alert('Failed to save changes.');
         });
+    }
+
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this item?');
     }
 </script>
 
