@@ -42,7 +42,7 @@
     <div style="display: flex; flex-direction: column;">
         {% for data in latest_CustomData_list %}
         <div style="display: flex; margin-bottom: 20px;">
-            <div style="flex: 1; padding-right: 40px;">
+            <div style="flex: 1; padding-right: 10px;">
                 {% if data.OSImage %}
                     <img src="{{ data.OSImage.url }}" alt="OS Image" style="max-width: 100%;">
                 {% endif %}
@@ -69,13 +69,13 @@
     </div>
     <form method="post" enctype="multipart/form-data" style="display: flex; flex-wrap: wrap; padding-top: 20px;">
         {% csrf_token %}
-        <div style="flex: 1; margin-right: -160px;">
+        <div style="flex: 1; margin-right: -30px;">
             <strong>Label: </strong>{{ form.OSLabel }}
         </div>
-        <div style="flex: 1; padding-right: 10px;">
+        <div style="flex: 1; padding-right: 40px;">
             <strong>Comments: </strong>{{ form.OSText }}
         </div>
-        <div style="flex: 1; margin-right: -100px;">
+        <div style="flex: 1; margin-right: -70px;">
             <strong>Image: {{ form.OSImage }}</strong>
         </div>
         <div style="flex: 1;">
