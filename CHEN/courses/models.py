@@ -59,16 +59,16 @@ class OSCustomData(models.Model):
     def __str__(self):
         return self.OSText
     
-    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.OSImage:
             img = Image.open(self.OSImage.path)
-        
+            if img.mode == 'RGBA':
+                img = img.convert('RGB')
             if img.height > 900 or img.width > 650:
                 output_size = (900, 650)
                 img.thumbnail(output_size)
-                img.save(self.OSImage.path)
+            img.save(self.OSImage.path)
     
     
     
