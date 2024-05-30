@@ -18,4 +18,8 @@ urlpatterns = [
     path('EDPage/technical_terms/OScustom_Page/', views.OScustom_page, name='OScustom_page'),
     path('EDPage/daily_vocabulary/', views.daily_vocabulary, name='daily_vocabulary'), 
     path('EDPage/daily_vocabulary/custom_page/', views.custom_page, name='custom_page'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] 
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
